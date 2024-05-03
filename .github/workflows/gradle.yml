@@ -49,7 +49,7 @@ jobs:
 
     - name: Determine Docker Image Tag
       env:
-        IMAGE_TAG: v0.0.0a
+        IMAGE_TAG: v0.0.0
       id: docker_tag
       run: |
         if [ "${{ steps.semantic.outputs.new_release_published }}" = "true" ]; then

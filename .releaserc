@@ -1,7 +1,7 @@
 {
     "branches": [
         "main",
-        "back-wflw"
+        "CD_backend_workflow "
     ],
     "tagFormat": "v${version}",
     "plugins": [
