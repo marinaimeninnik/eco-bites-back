@@ -20,8 +20,6 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    env:
-      IMAGE_TAG: v0.0.0
     permissions:
       contents: write
 
@@ -50,6 +48,8 @@ jobs:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Determine Docker Image Tag
+      env:
+        IMAGE_TAG: v0.0.0
       id: docker_tag
       run: |
         if [ "${{ steps.semantic.outputs.new_release_published }}" = "true" ]; then
