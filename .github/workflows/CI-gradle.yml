@@ -9,12 +9,12 @@ name: Java CI with Gradle
 
 on:
   workflow_dispatch:
-    # inputs:
-    #   release-artifact:
-    #     description: "Manually creates the .jar artifact"
-    #     required: false
-    #     type: boolean
-    #     default: false
+    inputs:
+      release-artifact:
+        description: "Manually creates the .jar artifact"
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   build:
