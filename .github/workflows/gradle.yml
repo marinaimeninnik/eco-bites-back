@@ -51,14 +51,17 @@ jobs:
       id: docker_tag
       run: |
         if [ "${{ steps.semantic.outputs.new_release_published }}" = "true" ]; then
-          echo "IMAGE_TAG=v${{ steps.semantic.outputs.new_release_version }}" > variables.env
+          "IMAGE_TAG=v${{ steps.semantic.outputs.new_release_version }}"
         else
+          GIT_TAG=$(git describe --tags --abbrev=0 2>/dev/null) || true
           if [ -z "$GIT_TAG" ]; then
-            echo "IMAGE_TAG=v0.0.0" > variables.env
+            # If there are no git tags, set the default image tag
+            IMAGE_TAG="v0.0.0"
           else
-            echo "IMAGE_TAG=$GIT_TAG" > variables.env
+            IMAGE_TAG="$GIT_TAG"
           fi
         fi
+        echo "IMAGE_TAG=$IMAGE_TAG" > variables.env
         echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
 
     - name: Log in to DockerHub
