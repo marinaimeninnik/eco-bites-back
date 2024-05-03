@@ -1,0 +1,78 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
+
+name: Java CI with Gradle
+
+on:
+  workflow_dispatch:
+    inputs:
+      release-artifact:
+        description: "Manually creates the .jar artifact"
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+    - name: Checkout sources
+      uses: actions/checkout@v4
+
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+    
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
+      with:
+        gradle-version: '8.5'
+
+    - name: Build with Gradle 8.5
+      run: gradle -p back build    #-p back specifies 'back' directory where gradlew.bat located
+
+    - name: Semantic Release
+      uses: cycjimmy/semantic-release-action@v4
+      id: semantic
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Determine Docker Image Tag
+      id: docker_tag
+      run: |
+        if [ "${{ steps.semantic.outputs.new_release_published }}" = "true" ]; then
+          echo "IMAGE_TAG=v${{ steps.semantic.outputs.new_release_version }}" >> $GITHUB_ENV
+        else
+          echo "IMAGE_TAG=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
+        fi
+
+    - name: Log in to DockerHub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKER_HUB_USERNAME }}
+        password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+    
+    - name: Build and push Docker 'ecobites-backend-image'
+      uses: docker/build-push-action@v2
+      with:
+        # context: . 
+        context: back
+        push: true
+        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/prod:app-${{ env.IMAGE_TAG }}
+        
+    - name: Build and push Docker 'ecobites-db-image'
+      uses: docker/build-push-action@v2
+      with:
+        context: back/db
+        push: true
+        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/db:db-${{ env.IMAGE_TAG }}
