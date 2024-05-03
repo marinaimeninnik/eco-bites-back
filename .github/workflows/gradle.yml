@@ -49,13 +49,16 @@ jobs:
 
     - name: Determine Docker Image Tag
       env:
-        IMAGE_TAG: v0.0.0
+        IMAGE_TAG: v0.0.0a
       id: docker_tag
       run: |
         if [ "${{ steps.semantic.outputs.new_release_published }}" = "true" ]; then
-          echo "IMAGE_TAG=v${{ steps.semantic.outputs.new_release_version }}"
+          IMAGE_TAG="v${{ steps.semantic.outputs.new_release_version }}"
         else
-          echo "IMAGE_TAG=$(git describe --tags --abbrev=0)"
+          IMAGE_TAG=$(git describe --tags --abbrev=0 2>/dev/null) || true
+          if [ -n "$GIT_TAG" ]; then
+            IMAGE_TAG="$GIT_TAG"
+          fi
         fi
         echo "IMAGE_TAG=$IMAGE_TAG" | tee -a $GITHUB_ENV > variables.env
 
