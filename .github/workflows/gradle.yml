@@ -32,11 +32,13 @@ jobs:
       run: |
         if [ "${{ steps.semantic.outputs.new_release_published }}" = "true" ]; then
           echo "IMAGE_TAG=v${{ steps.semantic.outputs.new_release_version }}" > variables.env
-        if [ -z "$GIT_TAG" ]; then
-          # If there are no git tags, set the default image tag
-          echo "IMAGE_TAG=v0.0.0" > variables.env
         else
-          echo "IMAGE_TAG=$GIT_TAG" > variables.env
+          if [ -z "$GIT_TAG" ]; then
+            # If there are no git tags, set the default image tag
+            echo "IMAGE_TAG=v0.0.0" > variables.env
+          else
+            echo "IMAGE_TAG=$GIT_TAG" > variables.env
+          fi
         fi
 
     - name: Set up JDK 21
