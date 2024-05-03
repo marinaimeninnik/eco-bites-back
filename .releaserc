@@ -1,7 +1,7 @@
 {
     "branches": [
         "main",
-        "CD_backend_workflow "
+        "CD_backend_workflow"
     ],
     "tagFormat": "v${version}",
     "plugins": [
