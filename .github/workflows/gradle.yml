@@ -18,7 +18,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -83,3 +82,21 @@ jobs:
         name: env-file
         path: variables.env
         
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download env-file artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: env-file
+
+      - name: Read env-file and set environment variable
+        run: |
+          echo "$(cat env-file)" >> $GITHUB_ENV
+
+      - name: Deploy Infrastructure
+        uses: marinaimeninnik/eco-bites-infra/.github/workflows/infra-create.yaml@main
+        with:
+          environment: 'dev'
+          image_tag: ${{ env.IMAGE_TAG }}
