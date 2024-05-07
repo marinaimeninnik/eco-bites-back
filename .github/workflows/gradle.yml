@@ -93,7 +93,10 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }} # Personal Access Token with repo scope
           repo:  marinaimeninnik/eco-bites-infra/.github/workflows/infra-create.yaml@main
           ref: main
-          inputs: '{"image_tag": ${{ env.IMAGE_TAG }}}'
+          inputs: |
+            {
+              "image_tag": "${{ env.IMAGE_TAG }}"
+            }
     #   - name: Download env-file artifact
     #     uses: actions/download-artifact@v2
     #     with:
