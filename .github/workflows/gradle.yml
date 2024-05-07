@@ -86,17 +86,29 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Download env-file artifact
-        uses: actions/download-artifact@v2
+      - name: Trigger Infra Workflow
+        uses: benc-uk/workflow-dispatch@v1.2.3
         with:
-          name: env-file
+          workflow: Infra Creation Workflow
+          token: ${{ secrets.GITHUB_TOKEN }} # Personal Access Token with repo scope
+          repo:  marinaimeninnik/eco-bites-infra/.github/workflows/infra-create.yaml@main
+          ref: main
+          inputs: '{"image_tag": ${{ env.IMAGE_TAG }}}'
+    #   - name: Download env-file artifact
+    #     uses: actions/download-artifact@v2
+    #     with:
+    #       name: env-file
 
-      - name: Read env-file and set environment variable
-        run: |
-          echo "$(cat env-file)" >> $GITHUB_ENV
+    #   - name: Read env-file and set environment variable
+    #     run: |
+    #       echo "$(cat env-file)" >> $GITHUB_ENV
 
-      - name: Deploy Infrastructure
-        uses: marinaimeninnik/eco-bites-infra/.github/workflows/infra-create.yaml@main
-        with:
-          environment: 'dev'
-          image_tag: ${{ env.IMAGE_TAG }}
+    #   - name: Deploy Infrastructure
+    #     uses: marinaimeninnik/eco-bites-infra/.github/workflows/infra-create.yaml@main
+    #     with:
+    #       environment: 'dev'
+    #       image_tag: ${{ env.IMAGE_TAG }}
+    # uses: marinaimeninnik/eco-bites-infra/.github/workflows/infra-create.yaml@main
+    # with:
+    #   environment: 'dev'
+    #   image_tag: ${{ env.IMAGE_TAG }}
