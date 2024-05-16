@@ -98,7 +98,7 @@ jobs:
         with:
           workflow: infra-create
           token: ${{ secrets.GITHUB_TOKEN }} # Personal Access Token with repo scope
-          repo:  marinaimeninnik/eco-bites-infra
+          repo: marinaimeninnik/eco-bites-infra
           ref: main
           # inputs: |
           #   {
