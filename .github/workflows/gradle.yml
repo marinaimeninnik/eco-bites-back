@@ -92,8 +92,6 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - name: Trigger Infra Workflow
         uses: benc-uk/workflow-dispatch@v1.2.1
@@ -101,7 +99,7 @@ jobs:
           workflow: infra-create
           token: ${{ secrets.GITHUB_TOKEN }} # Personal Access Token with repo scope
           repo: marinaimeninnik/eco-bites-infra
-          ref: main
+          # ref: main
           # inputs: |
           #   {
           #     "image_tag": "${{ env.IMAGE_TAG }}"
