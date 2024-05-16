@@ -99,8 +99,7 @@ jobs:
           workflow: infra-create.yaml
           repo: marinaimeninnik/eco-bites-infra
           token: ${{ secrets.GITHUB_TOKEN }} # Personal Access Token with repo scope
-          
-          # ref: main
+          ref: main
           # inputs: |
           #   {
           #     "image_tag": "${{ env.IMAGE_TAG }}"
