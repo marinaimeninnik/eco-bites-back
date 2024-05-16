@@ -91,8 +91,11 @@ jobs:
         
   deploy:
     needs: build
-    runs-on: ubuntu-latest
-    steps:
+    # runs-on: ubuntu-latest
+    uses: marinaimeninnik/eco-bites-infra/.github/workflows/infra-create.yaml@main
+    with:
+      image_tag: 'latest'
+    # steps:
       # - name: Trigger Infra Workflow
       #   uses: benc-uk/workflow-dispatch@v1.2.3
       #   with:
@@ -109,10 +112,10 @@ jobs:
       #         "image_tag": "latest"
       #       }
 
-      - name: Trigger Infra Workflow
-        uses: marinaimeninnik/eco-bites-infra/.github/workflows/infra-create.yaml@main
-        with:
-          image_tag: 'latest'
+      # - name: Trigger Infra Workflow
+      #   uses: marinaimeninnik/eco-bites-infra/.github/workflows/infra-create.yaml@main
+      #   with:
+      #     image_tag: 'latest'
           # secrets:
           #   ROLE_ARN: ${{ secrets.ROLE_ARN }}
           #   AWS_REGION: ${{ secrets.AWS_REGION }}
