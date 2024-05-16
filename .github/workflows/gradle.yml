@@ -94,11 +94,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Trigger Infra Workflow
-        uses: benc-uk/workflow-dispatch@v1.2.1
+        uses: benc-uk/workflow-dispatch@v1.2.3
         with:
-          workflow: infra-create
-          token: ${{ secrets.GITHUB_TOKEN }} # Personal Access Token with repo scope
+          workflow: infra-create.yaml
           repo: marinaimeninnik/eco-bites-infra
+          token: ${{ secrets.GITHUB_TOKEN }} # Personal Access Token with repo scope
+          
           # ref: main
           # inputs: |
           #   {
