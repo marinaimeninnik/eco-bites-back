@@ -91,14 +91,28 @@ jobs:
         
   deploy:
     needs: build
-    # runs-on: ubuntu-latest
-    # uses: marinaimeninnik/eco-bites-infra/.github/workflows/infra-create.yaml@main
-    uses: marinaimeninnik/eco-bites-infra/.github/workflows/infra-create.yaml@back-deployment
+    runs-on: ubuntu-latest
+
     permissions:
-      id-token: write
-      contents: read
-    with:
-      image_tag: 'latest'
+        id-token: write
+        contents: read
+
+    steps:
+      - name: Trigger Workflow B in Repo B
+        run: |
+          gh workflow run 'Java CI with Gradle' --ref marinaimeninnik/CD_backend_workflow --field image_tag='latest'
+        # env:
+        #   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+
+    # # uses: marinaimeninnik/eco-bites-infra/.github/workflows/infra-create.yaml@main
+    # uses: marinaimeninnik/eco-bites-infra/.github/workflows/infra-create.yaml@back-deployment
+    # permissions:
+    #   id-token: write
+    #   contents: read
+    # with:
+    #   image_tag: 'latest'
 
 
     # steps:
