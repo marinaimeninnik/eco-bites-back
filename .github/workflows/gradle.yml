@@ -9,12 +9,19 @@ name: Java CI with Gradle
 
 on:
   workflow_dispatch:
-    # inputs:
+    inputs:
     #   release-artifact:
     #     description: "Manually creates the .jar artifact"
     #     required: false
     #     type: boolean
     #     default: false
+      environment:
+        description: "Chose environment to deploy"
+        required: true
+        type: choice
+        options:
+          - dev
+          # - prod
 
 jobs:
   build:
@@ -91,28 +98,13 @@ jobs:
         
   deploy:
     needs: build
-    # runs-on: ubuntu-latest
-
-    # permissions:
-    #     id-token: write
-    #     contents: read
-
-    # steps:
-    #   - name: Trigger Workflow B in Repo B
-    #     run: |
-    #       gh workflow run 'infra-create' --repo marinaimeninnik/eco-bites-infra --ref back-deployment --field image_tag='latest'
-    #     env:
-    #       GH_TOKEN: ${{ secrets.GH_TOKEN }}
-
-
-
-    # uses: marinaimeninnik/eco-bites-infra/.github/workflows/infra-create.yaml@main
     uses: marinaimeninnik/eco-bites-infra/.github/workflows/infra-create.yaml@back-deployment
     permissions:
       id-token: write
       contents: read
     with:
-      image_tag: 'latest'
+      environment: ${{ github.event.inputs.environment }}
+      image_tag:  '${{ env.IMAGE_TAG }}'
 
 
     # steps:
