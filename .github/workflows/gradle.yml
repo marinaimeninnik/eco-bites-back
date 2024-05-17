@@ -93,10 +93,11 @@ jobs:
     needs: build
     # runs-on: ubuntu-latest
     uses: marinaimeninnik/eco-bites-infra/.github/workflows/infra-create.yaml@main
-    # with:
+    permissions:
+      id-token: write
     #   image_tag: 'latest'
 
-    
+
     # steps:
       # - name: Trigger Infra Workflow
       #   uses: benc-uk/workflow-dispatch@v1.2.3
