@@ -96,6 +96,10 @@ jobs:
     permissions:
       id-token: write
       contents: read
+    with:
+      role-to-assume: ${{ vars.ROLE_ARN }}
+      role-session-name: github-actions-labsadm
+      aws-region: ${{ vars.AWS_REGION }}
     #   image_tag: 'latest'
 
 
