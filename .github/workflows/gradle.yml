@@ -92,7 +92,8 @@ jobs:
   deploy:
     needs: build
     # runs-on: ubuntu-latest
-    uses: marinaimeninnik/eco-bites-infra/.github/workflows/infra-create.yaml@main
+    # uses: marinaimeninnik/eco-bites-infra/.github/workflows/infra-create.yaml@main
+    uses: marinaimeninnik/eco-bites-infra/.github/workflows/infra-create.yaml@back-deployment
     permissions:
       id-token: write
       contents: read
