@@ -93,16 +93,16 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
 
-    permissions:
-        id-token: write
-        contents: read
+    # permissions:
+    #     id-token: write
+    #     contents: read
 
-    steps:
-      - name: Trigger Workflow B in Repo B
-        run: |
-          gh workflow run 'infra-create' --repo marinaimeninnik/eco-bites-infra --ref back-deployment --field image_tag='latest'
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+    # steps:
+    #   - name: Trigger Workflow B in Repo B
+    #     run: |
+    #       gh workflow run 'infra-create' --repo marinaimeninnik/eco-bites-infra --ref back-deployment --field image_tag='latest'
+    #     env:
+    #       GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
 
 
@@ -115,22 +115,23 @@ jobs:
     #   image_tag: 'latest'
 
 
-    # steps:
-      # - name: Trigger Infra Workflow
-      #   uses: benc-uk/workflow-dispatch@v1.2.3
-      #   with:
-      #     workflow: infra-create.yaml
-      #     repo: marinaimeninnik/eco-bites-infra
-      #     token: ${{ secrets.GITHUB_TOKEN }} # Personal Access Token with repo scope
-      #     ref: main
-      #     # inputs: |
-      #     #   {
-      #     #     "image_tag": "${{ env.IMAGE_TAG }}"
-      #     #   }
-      #     inputs: |
-      #       {
-      #         "image_tag": "latest"
-      #       }
+    steps:
+      - name: Trigger Infra Workflow
+        uses: benc-uk/workflow-dispatch@v1.2.3
+        with:
+          workflow: 'infra-create'
+          repo: marinaimeninnik/eco-bites-infra
+          token: ${{ secrets.GH_TOKEN }} # Personal Access Token with repo scope
+          # ref: main
+          ref: back-deployment
+          # inputs: |
+          #   {
+          #     "image_tag": "${{ env.IMAGE_TAG }}"
+          #   }
+          inputs: |
+            {
+              "image_tag": "latest"
+            }
 
       # - name: Trigger Infra Workflow
       #   uses: marinaimeninnik/eco-bites-infra/.github/workflows/infra-create.yaml@main
