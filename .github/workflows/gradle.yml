@@ -100,7 +100,7 @@ jobs:
     steps:
       - name: Trigger Workflow B in Repo B
         run: |
-          gh workflow run 'Java CI with Gradle' --repo marinaimeninnik/eco-bites-back --field image_tag='latest'
+          gh workflow run 'infra-create' --repo marinaimeninnik/eco-bites-back  --ref back-deployment --field image_tag='latest'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
