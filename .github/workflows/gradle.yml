@@ -100,7 +100,7 @@ jobs:
     steps:
       - name: Trigger Workflow B in Repo B
         run: |
-          gh workflow run infra-create.yaml --repo marinaimeninnik/eco-bites-back --ref back-deployment --field image_tag='latest'
+          gh workflow run 'Infra Ecobytes' --repo marinaimeninnik/eco-bites-back --ref back-deployment --field image_tag='latest'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
