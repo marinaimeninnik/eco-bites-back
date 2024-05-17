@@ -102,7 +102,7 @@ jobs:
         run: |
           gh workflow run 'infra-create' --repo marinaimeninnik/eco-bites-infra --ref back-deployment --field image_tag='latest'
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
 
 
 
