@@ -104,7 +104,7 @@ jobs:
       contents: read
     with:
       environment: ${{ github.event.inputs.environment }}
-      image_tag:  '${{ env.IMAGE_TAG }}'
+      image_tag:  ${{ needs.build.outputs.IMAGE_TAG }}
 
 
     # steps:
