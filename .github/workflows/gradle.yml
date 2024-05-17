@@ -95,6 +95,7 @@ jobs:
     uses: marinaimeninnik/eco-bites-infra/.github/workflows/infra-create.yaml@main
     permissions:
       id-token: write
+      contents: read
     #   image_tag: 'latest'
 
 
