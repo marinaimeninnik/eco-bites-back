@@ -106,7 +106,7 @@ jobs:
         PREFIX: db
       run: |
         docker build -t $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$PREFIX-$IMAGE_TAG db
-        docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$PREFIX-IMAGE_TAG
+        docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$PREFIX-$IMAGE_TAG
     
     # - name: Build and push Docker backend-image
     #   uses: docker/build-push-action@v2
