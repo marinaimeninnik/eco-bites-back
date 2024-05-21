@@ -96,7 +96,7 @@ jobs:
         
   deliver:
     needs: build
-    uses: marinaimeninnik/eco-bites-infra/.github/workflows/infra-create.yaml@back-deployment   # specify branch where reusable workflow's located
+    uses: marinaimeninnik/eco-bites-infra/.github/workflows/infra-create.yaml
     permissions:
       id-token: write
       contents: read
