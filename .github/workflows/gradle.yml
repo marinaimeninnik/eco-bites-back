@@ -78,19 +78,19 @@ jobs:
     - name: Get latest tag
       id: latest_tag
       run: |
-        latest_tag=$(git describe --tags --abbrev=0)
-        echo "::set-output name=tag::$latest_tag"
+          latest_tag=$(git describe --tags --abbrev=0)
+          echo "tag=$latest_tag" >> $GITHUB_ENV
 
     - name: Set image tag
       id: set_tag
       run: |
-        if [[ -n "${{ steps.latest_tag.outputs.tag }}" ]]; then
+        if [[ -n "${{ env.tag }}" ]]; then
           echo "Tag already exists, using existing tag"
-          echo "image_tag=${{ steps.latest_tag.outputs.tag }}"
+          echo "image_tag=${{ env.tag }}" >> $GITHUB_ENV
         else
           echo "No new release or existing tag, setting default image tag"
-          echo "image_tag=0.0.0"
-        fi >> $GITHUB_ENV
+          echo "image_tag=0.0.0" >> $GITHUB_ENV
+        fi
 
     - name: Use image tag
       run: |
