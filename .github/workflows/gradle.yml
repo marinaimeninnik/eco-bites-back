@@ -97,6 +97,7 @@ jobs:
         docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$PREFIX-$IMAGE_TAG
 
   check_stage:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Check image pass
