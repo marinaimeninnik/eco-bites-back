@@ -57,25 +57,60 @@ jobs:
         role-session-name: github-actions-labsadm
         aws-region: ${{ vars.AWS_REGION }}
 
-    - name: Determine Docker Image Tag
-      id: docker_tag
+    # - name: Determine Docker Image Tag
+    #   id: docker_tag
+    #   run: |
+    #     IMAGE_TAG="v0.0.0"
+    #     if [ "${{ steps.semantic.outputs.new_release_published }}" = "true" ]; then
+    #       echo "IMAGE_TAG=v${{ steps.semantic.outputs.new_release_version }}" | tee -a $GITHUB_ENV > variables.env
+    #     else
+    #       echo "IMAGE_TAG=$(git describe --tags --abbrev=0)" | tee -a $GITHUB_ENV > variables.env
+    #     fi
+    #     echo "IMAGE_TAG=$IMAGE_TAG"
+    #     echo "IMAGE_TAG=$IMAGE_TAG" >> "$GITHUB_OUTPUT"
+    #   # run: |
+    #   #   if [ "${{ steps.semantic.outputs.new_release_published }}" = "true" ]; then
+    #   #     IMAGE_TAG="v${{ steps.semantic.outputs.new_release_version }}"
+    #   #   else
+    #   #     IMAGE_TAG=$(git describe --tags --abbrev=0)
+    #   #   fi
+    #   #   echo "::set-output name=IMAGE_TAG::$IMAGE_TAG"
+    - name: Check for existing tag
+      id: check_tag
       run: |
-        IMAGE_TAG="v0.0.0"
-        if [ "${{ steps.semantic.outputs.new_release_published }}" = "true" ]; then
-          echo "IMAGE_TAG=v${{ steps.semantic.outputs.new_release_version }}" | tee -a $GITHUB_ENV > variables.env
+        if git describe --tags --exact-match 2>/dev/null; then
+          echo "::set-output name=tag_exists::true"
         else
-          echo "IMAGE_TAG=$(git describe --tags --abbrev=0)" | tee -a $GITHUB_ENV > variables.env
+          echo "::set-output name=tag_exists::false"
         fi
-        echo "IMAGE_TAG=$IMAGE_TAG"
-        echo "IMAGE_TAG=$IMAGE_TAG" >> "$GITHUB_OUTPUT"
-      # run: |
-      #   if [ "${{ steps.semantic.outputs.new_release_published }}" = "true" ]; then
-      #     IMAGE_TAG="v${{ steps.semantic.outputs.new_release_version }}"
-      #   else
-      #     IMAGE_TAG=$(git describe --tags --abbrev=0)
-      #   fi
-      #   echo "::set-output name=IMAGE_TAG::$IMAGE_TAG"
-    
+
+    - name: Check for new release
+      id: check_release
+      run: |
+        if git describe --tags --abbrev=0 2>/dev/null; then
+          echo "::set-output name=new_release::true"
+        else
+          echo "::set-output name=new_release::false"
+        fi
+
+    - name: Set image tag
+      id: set_tag
+      run: |
+        if [[ "${{ steps.check_tag.outputs.tag_exists }}" == "true" ]]; then
+          echo "Tag already exists, using existing tag"
+          echo "::set-output name=image_tag::${{ github.ref }}"
+        elif [[ "${{ steps.check_release.outputs.new_release }}" == "true" ]]; then
+          echo "New release detected, setting image tag"
+          echo "::set-output name=image_tag::${{ github.ref }}"
+        else
+          echo "No new release or existing tag, setting default image tag"
+          echo "::set-output name=image_tag::0.0.0"
+        fi
+
+    - name: Use image tag
+      run: |
+        echo "Image tag: ${{ steps.set_tag.outputs.image_tag }}"
+      
     - name: Login to Amazon ECR
       id: login-ecr-public
       uses: aws-actions/amazon-ecr-login@v2
