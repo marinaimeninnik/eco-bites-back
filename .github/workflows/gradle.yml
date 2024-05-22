@@ -85,10 +85,10 @@ jobs:
       id: set_tag
       run: |
         if [[ -n "${{ env.tag }}" ]]; then
-          echo "Tag already exists, using existing tag"
+          echo "Tag already exists, using existing tag" >> $GITHUB_ENV
           echo "image_tag=${{ env.tag }}" >> $GITHUB_ENV
         else
-          echo "No new release or existing tag, setting default image tag"
+          echo "No new release or existing tag, setting default image tag" >> $GITHUB_ENV
           echo "image_tag=0.0.0" >> $GITHUB_ENV
         fi
 
