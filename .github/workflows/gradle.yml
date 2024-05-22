@@ -75,41 +75,26 @@ jobs:
     #   #     IMAGE_TAG=$(git describe --tags --abbrev=0)
     #   #   fi
     #   #   echo "::set-output name=IMAGE_TAG::$IMAGE_TAG"
-    - name: Check for existing tag
-      id: check_tag
+    - name: Get latest tag
+      id: latest_tag
       run: |
-        if git describe --tags --exact-match 2>/dev/null; then
-          echo "::set-output name=tag_exists::true"
-        else
-          echo "::set-output name=tag_exists::false"
-        fi
-
-    - name: Check for new release
-      id: check_release
-      run: |
-        if git describe --tags --abbrev=0 2>/dev/null; then
-          echo "::set-output name=new_release::true"
-        else
-          echo "::set-output name=new_release::false"
-        fi
+        latest_tag=$(git describe --tags --abbrev=0)
+        echo "::set-output name=tag::$latest_tag"
 
     - name: Set image tag
       id: set_tag
       run: |
-        if [[ "${{ steps.check_tag.outputs.tag_exists }}" == "true" ]]; then
+        if [[ -n "${{ steps.latest_tag.outputs.tag }}" ]]; then
           echo "Tag already exists, using existing tag"
-          echo "::set-output name=image_tag::${{ github.ref }}"
-        elif [[ "${{ steps.check_release.outputs.new_release }}" == "true" ]]; then
-          echo "New release detected, setting image tag"
-          echo "::set-output name=image_tag::${{ github.ref }}"
+          echo "image_tag=${{ steps.latest_tag.outputs.tag }}"
         else
           echo "No new release or existing tag, setting default image tag"
-          echo "::set-output name=image_tag::0.0.0"
-        fi
+          echo "image_tag=0.0.0"
+        fi >> $GITHUB_ENV
 
     - name: Use image tag
       run: |
-        echo "Image tag: ${{ steps.set_tag.outputs.image_tag }}"
+        echo "Image tag: ${{ env.image_tag }}"
       
     - name: Login to Amazon ECR
       id: login-ecr-public
