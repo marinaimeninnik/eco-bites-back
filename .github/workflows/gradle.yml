@@ -59,22 +59,23 @@ jobs:
 
     - name: Determine Docker Image Tag
       id: docker_tag
-      # run: |
-      #   IMAGE_TAG="v0.0.0"
-      #   if [ "${{ steps.semantic.outputs.new_release_published }}" = "true" ]; then
-      #     echo "IMAGE_TAG=v${{ steps.semantic.outputs.new_release_version }}" | tee -a $GITHUB_ENV > variables.env
-      #   else
-      #     echo "IMAGE_TAG=$(git describe --tags --abbrev=0)" | tee -a $GITHUB_ENV > variables.env
-      #   fi
-      #   echo "IMAGE_TAG=$IMAGE_TAG"
-      #   echo "::set-output name=IMAGE_TAG::$IMAGE_TAG"
       run: |
+        IMAGE_TAG="v0.0.0"
         if [ "${{ steps.semantic.outputs.new_release_published }}" = "true" ]; then
-          IMAGE_TAG="v${{ steps.semantic.outputs.new_release_version }}"
+          echo "IMAGE_TAG=v${{ steps.semantic.outputs.new_release_version }}" | tee -a $GITHUB_ENV > variables.env
         else
-          IMAGE_TAG=$(git describe --tags --abbrev=0)
+          echo "IMAGE_TAG=$(git describe --tags --abbrev=0)" | tee -a $GITHUB_ENV > variables.env
         fi
-        echo "::set-output name=IMAGE_TAG::$IMAGE_TAG"
+        echo "IMAGE_TAG=$IMAGE_TAG"
+
+        echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_OUTPUT
+      # run: |
+      #   if [ "${{ steps.semantic.outputs.new_release_published }}" = "true" ]; then
+      #     IMAGE_TAG="v${{ steps.semantic.outputs.new_release_version }}"
+      #   else
+      #     IMAGE_TAG=$(git describe --tags --abbrev=0)
+      #   fi
+      #   echo "::set-output name=IMAGE_TAG::$IMAGE_TAG"
     
     - name: Login to Amazon ECR
       id: login-ecr-public
