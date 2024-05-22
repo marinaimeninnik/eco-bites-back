@@ -68,31 +68,6 @@ jobs:
         fi
         cat variables.env
 
-    # #   # run: |
-    # #   #   if [ "${{ steps.semantic.outputs.new_release_published }}" = "true" ]; then
-    # #   #     IMAGE_TAG="v${{ steps.semantic.outputs.new_release_version }}"
-    # #   #   else
-    # #   #     IMAGE_TAG=$(git describe --tags --abbrev=0)
-    # #   #   fi
-    # #   #   echo "::set-output name=IMAGE_TAG::$IMAGE_TAG"
-    # - name: Get latest tag
-    #   id: latest_tag
-    #   run: |
-    #       latest_tag=$(git describe --tags --abbrev=0)
-    #       echo "tag=$latest_tag" >> $GITHUB_ENV
-
-    # - name: Set image tag
-    #   id: set_tag
-    #   run: |
-    #     if [[ -n "${{ env.tag }}" ]]; then
-    #       echo "Tag already exists, using existing tag"
-    #       echo "image_tag=${{ env.tag }}" >> $GITHUB_ENV
-    #     else
-    #       echo "No new release or existing tag, setting default image tag"
-    #       echo "image_tag=0.0.0" >> $GITHUB_ENV
-    #     fi
-
-      
     - name: Login to Amazon ECR
       id: login-ecr-public
       uses: aws-actions/amazon-ecr-login@v2
@@ -120,7 +95,16 @@ jobs:
       run: |
         docker build -t $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$PREFIX-$IMAGE_TAG db
         docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$PREFIX-$IMAGE_TAG
-        
+
+  check_stage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check image pass
+        env:
+          image_tag:  ${{ needs.build.outputs.IMAGE_TAG }}
+        run: echo 'image tag is $image_tag'
+
+
   deliver:
     needs: build
     uses: marinaimeninnik/eco-bites-infra/.github/workflows/infra-create.yaml@back-deployment
