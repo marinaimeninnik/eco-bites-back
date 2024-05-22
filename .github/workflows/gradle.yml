@@ -62,9 +62,9 @@ jobs:
       run: |
         IMAGE_TAG="v0.0.0"
         if [ "${{ steps.semantic.outputs.new_release_published }}" = "true" ]; then
-          echo "IMAGE_TAG=v${{ steps.semantic.outputs.new_release_version }}" | tee -a $GITHUB_ENV > variables.env
+          echo "IMAGE_TAG=v${{ steps.semantic.outputs.new_release_version }}" | tee -a $GITHUB_OUTPUT > variables.env
         else
-          echo "IMAGE_TAG=$(git describe --tags --abbrev=0)" | tee -a $GITHUB_ENV > variables.env
+          echo "IMAGE_TAG=$(git describe --tags --abbrev=0)" | tee -a $GITHUB_OUTPUT > variables.env
         fi
         cat variables.env
 
@@ -109,7 +109,7 @@ jobs:
       run: |
         echo 'printing printenv'
         printenv IMAGE_TAG
-        echo 'printing env.image_tag'
+        echo 'printing OUTPUTS.image_tag'
         echo '${{ steps.docker_tag.outputs.IMAGE_TAG}}'
         docker build -t $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$PREFIX-$IMAGE_TAG .
         docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$PREFIX-$IMAGE_TAG
