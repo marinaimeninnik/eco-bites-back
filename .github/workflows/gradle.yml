@@ -106,7 +106,7 @@ jobs:
     steps:
       - name: Check image pass
         run: |
-          echo 'image tag is needs $IMAGE_TAG'
+          echo 'image tag is needs $image_tag'
           echo 'image tag is env ${{ env.IMAGE_TAG }}'
 
 
