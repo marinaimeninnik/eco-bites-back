@@ -25,6 +25,8 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs: 
+      IMAGE_TAG: ${{ steps.docker_tag.outputs.IMAGE_TAG }}
 
     steps:
     - name: Checkout sources
@@ -67,7 +69,6 @@ jobs:
           echo "IMAGE_TAG=$(git describe --tags --abbrev=0)" | tee -a $GITHUB_OUTPUT > variables.env
         fi
         cat variables.env
-        echo "::set-output name=IMAGE_TAG::$IMAGE_TAG"
 
     - name: Login to Amazon ECR
       id: login-ecr-public
@@ -100,10 +101,12 @@ jobs:
   check_stage:
     needs: build
     runs-on: ubuntu-latest
+    env:
+      image_tag: ${{ needs.build.outputs.IMAGE_TAG }}
     steps:
       - name: Check image pass
         run: |
-          echo 'image tag is needs ${{ needs.build.outputs.IMAGE_TAG }}'
+          echo 'image tag is needs $IMAGE_TAG'
           echo 'image tag is env ${{ env.IMAGE_TAG }}'
 
 
