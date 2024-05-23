@@ -108,7 +108,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Download math result for job 2
+      - name: Download image_tag from artifact
         uses: actions/download-artifact@v4
         with:
           name: variables
@@ -126,5 +126,4 @@ jobs:
       contents: read
     with:
       environment: ${{ github.event.inputs.environment }}
-      image_tag:  ${{ needs.build.outputs.IMAGE_TAG }}
 
