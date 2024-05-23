@@ -84,7 +84,6 @@ jobs:
 
     - name: Build, tag, and push app-docker image to Amazon ECR Public
       env:
-        # IMAGE_TAG: ${{ steps.docker_tag.outputs.IMAGE_TAG }}
         REGISTRY: ${{ steps.login-ecr-public.outputs.registry }}
         REGISTRY_ALIAS: ${{ vars.ECR_ALIAS }}
         REPOSITORY: ${{ vars.ECR_NAME }}
@@ -95,28 +94,13 @@ jobs:
 
     - name: Build, tag, and push db-docker image to Amazon ECR Public
       env:
-        # IMAGE_TAG: ${{ steps.docker_tag.outputs.IMAGE_TAG }}
         REGISTRY: ${{ steps.login-ecr-public.outputs.registry }}
         REGISTRY_ALIAS: ${{ vars.ECR_ALIAS }}
         REPOSITORY: ${{ vars.ECR_NAME }}
         PREFIX: db
       run: |
         docker build -t $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$PREFIX-$IMAGE_TAG db
-        docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$PREFIX-$IMAGE_TAG        
-
-  check_stage:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download image_tag from artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: variables
-      - name: Print the final result
-        shell: bash
-        run: |
-          value=`cat variables.env`
-          echo The result is $value
+        docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$PREFIX-$IMAGE_TAG
 
   deliver:
     needs: build
