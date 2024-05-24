@@ -110,4 +110,5 @@ jobs:
       contents: read
     with:
       environment: ${{ github.event.inputs.environment }}
+      trigger_pipeline: gradle.yaml
 
