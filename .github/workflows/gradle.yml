@@ -112,3 +112,10 @@ jobs:
       environment: ${{ github.event.inputs.environment }}
       trigger_pipeline: ${{ github.workflow }}
 
+  deploy:
+    needs: deliver
+    uses: marinaimeninnik/eco-bites-back/.github/workflows/docker-deploy.yaml@CD_backend_workflow
+    permissions:
+      id-token: write
+      contents: read
+
