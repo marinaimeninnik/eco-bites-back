@@ -37,5 +37,4 @@ jobs:
 
       - name: Deploy to EC2
         run: |
-          INSTANCE_ID=$(cat instance-id)
-          aws ssm send-command --instance-ids $INSTANCE_ID --document-name "AWS-RunShellScript" --parameters commands=["cd /path/to/your/docker-compose/directory","docker-compose up -d"]
+          aws ssm send-command --instance-ids $INSTANCE_ID --document-name "AWS-RunShellScript" --parameters commands=["docker-compose up -d"]
