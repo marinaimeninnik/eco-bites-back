@@ -32,6 +32,9 @@ jobs:
     #   - name: Setup AWS CLI
     #     uses: aws-actions/aws-cli-setup@v2
 
+      - name: Load instance ID from file
+        run: source tf-outputs.env
+
       - name: Deploy to EC2
         run: |
           INSTANCE_ID=$(cat instance-id)
