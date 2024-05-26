@@ -42,11 +42,11 @@ jobs:
 
       - name: Upload docker-compose to S3
         run: |
-          aws s3 cp docker-compose.yml s3://dev-artifact-ecobytes/docker-compose.yml
+          aws s3 cp docker-compose.yml s3://dev-artifact-ecobytes/docker-compose.yaml
 
       - name: Transfer docker-compose to EC2
         run: |
-          aws ssm send-command --instance-ids $INSTANCE_ID --document-name "AWS-RunShellScript" --parameters commands=["aws s3 cp s3://dev-artifact-ecobytes/docker-compose.yml /home/ubuntu/docker-compose.yml"]
+          aws ssm send-command --instance-ids $INSTANCE_ID --document-name "AWS-RunShellScript" --parameters commands=["aws s3 cp s3://dev-artifact-ecobytes/docker-compose.yaml /home/ubuntu/docker-compose.yaml"]
 
       - name: Deploy to EC2
         run: |
