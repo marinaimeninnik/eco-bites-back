@@ -22,6 +22,11 @@ jobs:
         with:
           name: tf-outputs
 
+      - name: Download docker-compose artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: docker-compose
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -35,6 +40,10 @@ jobs:
       - name: Load instance ID from file
         run: source tf-outputs.env
 
+      - name: Transfer docker-compose to EC2
+        run: |
+          aws ssm send-command --instance-ids $INSTANCE_ID --document-name "AWS-RunShellScript" --parameters commands=["echo '$(cat docker-compose.yaml)' > /home/ubuntu/docker-compose.yaml"]
+
       - name: Deploy to EC2
         run: |
-          aws ssm send-command --instance-ids $INSTANCE_ID --document-name "AWS-RunShellScript" --parameters commands=["docker-compose up -d"]
+          aws ssm send-command --instance-ids $INSTANCE_ID --document-name "AWS-RunShellScript" --parameters commands=["sudo docker-compose -f /home/ubuntu/docker-compose.yaml up -d"]
