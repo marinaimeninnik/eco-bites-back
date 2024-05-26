@@ -44,6 +44,11 @@ jobs:
         run: |
           aws s3 cp docker-compose.yaml s3://dev-artifact-ecobytes/docker-compose.yaml
 
+      - name: Double-check stage
+        run: |
+          aws s3 ls s3://dev-artifact-ecobytes/
+
+
       - name: Transfer docker-compose to EC2
         run: |
           aws ssm send-command --instance-ids $INSTANCE_ID --document-name "AWS-RunShellScript" --parameters commands=["aws s3 cp s3://dev-artifact-ecobytes/docker-compose.yaml /home/ubuntu/docker-compose.yaml"]
