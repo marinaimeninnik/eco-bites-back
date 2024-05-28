@@ -50,8 +50,15 @@ jobs:
 
 
       - name: Transfer docker-compose to EC2
+       #   aws ssm send-command --instance-ids $INSTANCE_ID --document-name "AWS-RunShellScript" --parameters commands=["aws s3 cp s3://dev-artifact-ecobytes/docker-compose.yaml /home/ubuntu/docker-compose.yaml"]
+        run: |       
+            output=$(aws ssm send-command --instance-ids $INSTANCE_ID --document-name "AWS-RunShellScript" --parameters commands=["aws s3 cp s3://dev-artifact-ecobytes/docker-compose.yaml /home/ubuntu/docker-compose.yaml"])
+            command_id=$(echo $output | jq -r '.Command.CommandId')
+            echo "command-id=$command_id" >> GITHUB_ENV
+
+      - name: Check SSM command status
         run: |
-          aws ssm send-command --instance-ids $INSTANCE_ID --document-name "AWS-RunShellScript" --parameters commands=["aws s3 cp s3://dev-artifact-ecobytes/docker-compose.yaml /home/ubuntu/docker-compose.yaml"]
+            aws ssm list-command-invocations --command-id ${{env.command-id }}--details
 
       - name: Deploy to EC2
         run: |
