@@ -41,18 +41,18 @@ jobs:
         run: |
           aws s3 cp docker-compose.yaml s3://dev-artifact-ecobytes/docker-compose.yaml
 
-    #   - name: Transfer docker-compose to EC2
-    #     run: |
-    #       aws ssm send-command --instance-ids ${{env.INSTANCE_ID}} --document-name "AWS-RunShellScript" --parameters commands=["aws s3 cp s3://dev-artifact-ecobytes/docker-compose.yaml /home/ubuntu/docker-compose.yaml"]
-
       - name: Transfer docker-compose to EC2
-        id: transfer
-        uses: peterkimzz/aws-ssm-send-command@1.1.1
-        with:
-            instance-ids: ${{ env.INSTANCE_ID }}
-            document-name: AWS-RunShellScript
-            comment: Copy docker-compose file from S3 to EC2
-            parameters: commands=["aws s3 cp s3://dev-artifact-ecobytes/docker-compose.yaml /home/ubuntu/docker-compose.yaml"]
+        run: |
+          aws ssm send-command --instance-ids ${{env.INSTANCE_ID}} --document-name "AWS-RunShellScript" --parameters commands=["aws s3 cp s3://dev-artifact-ecobytes/docker-compose.yaml /home/ubuntu/docker-compose.yaml"]
+
+    #   - name: Transfer docker-compose to EC2
+    #     id: transfer
+    #     uses: peterkimzz/aws-ssm-send-command@1.1.1
+    #     with:
+    #         instance-ids: ${{ env.INSTANCE_ID }}
+    #         document-name: AWS-RunShellScript
+    #         comment: Copy docker-compose file from S3 to EC2
+    #         parameters: commands=["aws s3 cp s3://dev-artifact-ecobytes/docker-compose.yaml /home/ubuntu/docker-compose.yaml"]
 
 
     #   - name: Transfer docker-compose to EC2
