@@ -47,7 +47,7 @@ jobs:
 
     #   - name: Transfer docker-compose to EC2
     #     id: transfer
-    #     uses: peterkimzz/aws-ssm-send-command@1.1.1
+    #     uses: peterkimzz/aws-ssm-send-command@v1.1.1
     #     with:
     #         instance-ids: ${{ env.INSTANCE_ID }}
     #         document-name: AWS-RunShellScript
@@ -62,9 +62,9 @@ jobs:
     #         document-name: AWS-RunShellScript
     #         parameters: commands=["aws s3 cp s3://dev-artifact-ecobytes/docker-compose.yaml /home/ubuntu/docker-compose.yaml"]
 
-      - name: Show transfer result
-        run: |
-         echo "Transfer result: ${{ steps.transfer.outputs.result }}"
+    #   - name: Show transfer result
+    #     run: |
+    #      echo "Transfer result: ${{ steps.transfer.outputs.result }}"
     
       - name: Deploy to EC2
         run: |
