@@ -52,20 +52,18 @@ jobs:
           aws s3 ls s3://dev-artifact-ecobytes/
 
 
-    #   - name: Transfer docker-compose to EC2
-    #    #   aws ssm send-command --instance-ids $INSTANCE_ID --document-name "AWS-RunShellScript" --parameters commands=["aws s3 cp s3://dev-artifact-ecobytes/docker-compose.yaml /home/ubuntu/docker-compose.yaml"]
-    #     run: |       
-    #         output=$(aws ssm send-command --instance-ids $INSTANCE_ID --document-name "AWS-RunShellScript" --parameters commands=["aws s3 cp s3://dev-artifact-ecobytes/docker-compose.yaml /home/ubuntu/docker-compose.yaml"])
-    #         command_id=$(echo $output | jq -r '.Command.CommandId')
-    #         echo "command-id=$command_id" >> GITHUB_ENV
+      - name: Transfer docker-compose to EC2
+        run: |
+          aws ssm send-command --instance-ids ${{env.INSTANCE_ID}} --document-name "AWS-RunShellScript" --parameters commands=["aws s3 cp s3://dev-artifact-ecobytes/docker-compose.yaml /home/ubuntu/docker-compose.yaml"]
+          
 
     #   - name: Check SSM command status
     #     run: |
     #         aws ssm list-command-invocations --command-id ${{env.command-id }}--details
 
-    #   - name: Deploy to EC2
-    #     run: |
-    #       aws ssm send-command --instance-ids $INSTANCE_ID --document-name "AWS-RunShellScript" --parameters commands=["sudo docker-compose -f /home/ubuntu/docker-compose.yaml up -d"]
+      - name: Deploy to EC2
+        run: |
+          aws ssm send-command --instance-ids ${{env.INSTANCE_ID}} --document-name "AWS-RunShellScript" --parameters commands=["sudo docker-compose -f /home/ubuntu/docker-compose.yaml up -d"]
 
     #   - name: Transfer docker-compose to EC2
     #     uses: peterkimzz/aws-ssm-send-command@1.0.0
@@ -82,3 +80,7 @@ jobs:
     #         document-name: AWS-RunShellScript
     #         comment: Run docker-compose up
     #         parameters: commands=["sudo docker-compose -f /home/ubuntu/docker-compose.yaml up -d"]
+
+    # output=$(aws ssm send-command --instance-ids $INSTANCE_ID --document-name "AWS-RunShellScript" --parameters commands=["aws s3 cp s3://dev-artifact-ecobytes/docker-compose.yaml /home/ubuntu/docker-compose.yaml"])
+    # command_id=$(echo $output | jq -r '.Command.CommandId')
+    # echo "command-id=$command_id" >> GITHUB_ENV
