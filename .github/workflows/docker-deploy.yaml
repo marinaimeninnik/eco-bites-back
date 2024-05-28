@@ -38,10 +38,10 @@ jobs:
     #     uses: aws-actions/aws-cli-setup@v2
 
       - name: Load instance ID from file
-        run: source tf-outputs.env
+        run: cat tf-outputs.env >> $GITHUB_ENV
 
       - name: Check instance ID stage
-        run: echo $INSTANCE_ID
+        run: echo ${{env.INSTANCE_ID}}
 
       - name: Upload docker-compose to S3
         run: |
