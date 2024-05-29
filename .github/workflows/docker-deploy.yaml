@@ -86,7 +86,8 @@ jobs:
                     echo "Transfer command completed successfully."
                     break
                 elif [[ "$status" == "Failed" ]]; then
-                    echo "Transfer command failed."
+                    echo "Transfer command failed. Command details:"
+                    aws ssm list-command-invocations --command-id ${{steps.transfer.outputs.transfer-command-id}} --details
                     exit 1
                 else
                     echo "Transfer command is still in progress..."
