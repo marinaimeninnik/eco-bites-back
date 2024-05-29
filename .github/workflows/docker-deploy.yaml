@@ -81,17 +81,17 @@ jobs:
       - name: Check transfer status
         run: |
             while true; do
-            status=$(aws ssm list-command-invocations --command-id ${{steps.transfer.outputs.transfer-command-id}} --details --query "CommandInvocations[].Status" --output text)
-            if [[ "$status" == "Success" ]]; then
-                echo "Transfer command completed successfully."
-                break
-            elif [[ "$status" == "Failed" ]]; then
-                echo "Transfer command failed."
-                exit 1
-            else
-                echo "Transfer command is still in progress..."
-                sleep 10
-            fi
+                status=$(aws ssm list-command-invocations --command-id ${{steps.transfer.outputs.transfer-command-id}} --details --query "CommandInvocations[].Status" --output text)
+                if [[ "$status" == "Success" ]]; then
+                    echo "Transfer command completed successfully."
+                    break
+                elif [[ "$status" == "Failed" ]]; then
+                    echo "Transfer command failed."
+                    exit 1
+                else
+                    echo "Transfer command is still in progress..."
+                    sleep 10
+                fi
             done
 
       - name: Deploy to EC2
@@ -104,15 +104,15 @@ jobs:
       - name: Check deploy status
         run: |
             while true; do
-            status=$(aws ssm list-command-invocations --command-id ${{steps.deploy.outputs.deploy-command-id}} --details --query "CommandInvocations[].Status" --output text)
-            if [[ "$status" == "Success" ]]; then
-                echo "Deploy command completed successfully."
-                break
-            elif [[ "$status" == "Failed" ]]; then
-                echo "Deploy command failed."
-                exit 1
-            else
-                echo "Deploy command is still in progress..."
-                sleep 10
-            fi
+                status=$(aws ssm list-command-invocations --command-id ${{steps.deploy.outputs.deploy-command-id}} --details --query "CommandInvocations[].Status" --output text)
+                if [[ "$status" == "Success" ]]; then
+                    echo "Deploy command completed successfully."
+                    break
+                elif [[ "$status" == "Failed" ]]; then
+                    echo "Deploy command failed."
+                    exit 1
+                else
+                    echo "Deploy command is still in progress..."
+                    sleep 10
+                fi
             done
