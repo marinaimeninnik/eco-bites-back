@@ -30,14 +30,19 @@ jobs:
       - name: Load instance ID from file
         run: cat tf-outputs.env >> $GITHUB_ENV
 
+      - name: Check variables
+        run: echo 'bucket_name is ${{ env.ARTIFACT_S3_NAME }}'
+
       - name: Upload docker-compose to S3
+        #   aws s3 cp docker-compose.yaml s3://dev-artifact-ecobytes/docker-compose.yaml
         run: |
-          aws s3 cp docker-compose.yaml s3://dev-artifact-ecobytes/docker-compose.yaml
+            aws s3 cp docker-compose.yaml s3://${{ env.ARTIFACT_S3_NAME }}/docker-compose.yaml
 
       - name: Transfer docker-compose to EC2
         id: transfer
+         # output=$(aws ssm send-command --instance-ids ${{env.INSTANCE_ID}} --document-name "AWS-RunShellScript" --parameters commands=["aws s3 cp s3://dev-artifact-ecobytes/docker-compose.yaml /home/ec2-user/docker-compose.yaml"])
         run: |
-            output=$(aws ssm send-command --instance-ids ${{env.INSTANCE_ID}} --document-name "AWS-RunShellScript" --parameters commands=["aws s3 cp s3://dev-artifact-ecobytes/docker-compose.yaml /home/ec2-user/docker-compose.yaml"])
+            output=$(aws ssm send-command --instance-ids ${{env.INSTANCE_ID}} --document-name "AWS-RunShellScript" --parameters commands=["aws s3 cp s3://${{ env.ARTIFACT_S3_NAME }}/docker-compose.yaml /home/ec2-user/docker-compose.yaml"])
             command_id=$(echo $output | jq -r '.Command.CommandId')
             echo "transfer-command-id=$command_id" >> $GITHUB_OUTPUT
 
