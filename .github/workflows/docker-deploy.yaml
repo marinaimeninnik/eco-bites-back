@@ -74,7 +74,7 @@ jobs:
       - name: Transfer docker-compose to EC2
         id: transfer
         run: |
-            output=$(aws ssm send-command --instance-ids ${{env.INSTANCE_ID}} --document-name "AWS-RunShellScript" --parameters commands=["aws s3 cp s3://dev-artifact-ecobytes/docker-compose.yaml /home/ubuntu/docker-compose.yaml"])
+            output=$(aws ssm send-command --instance-ids ${{env.INSTANCE_ID}} --document-name "AWS-RunShellScript" --parameters commands=["aws s3 cp s3://dev-artifact-ecobytes/docker-compose.yaml /home/ec2-user/docker-compose.yaml"])
             command_id=$(echo $output | jq -r '.Command.CommandId')
             echo "transfer-command-id=$command_id" >> $GITHUB_OUTPUT
 
@@ -98,7 +98,7 @@ jobs:
       - name: Deploy to EC2
         id: deploy
         run: |
-            output=$(aws ssm send-command --instance-ids ${{env.INSTANCE_ID}} --document-name "AWS-RunShellScript" --parameters commands=["sudo docker-compose -f /home/ubuntu/docker-compose.yaml up -d"])
+            output=$(aws ssm send-command --instance-ids ${{env.INSTANCE_ID}} --document-name "AWS-RunShellScript" --parameters commands=["sudo docker-compose -f /home/ec2-user/docker-compose.yaml up -d"])
             command_id=$(echo $output | jq -r '.Command.CommandId')
             echo "deploy-command-id=$command_id" >> $GITHUB_OUTPUT
 
@@ -110,7 +110,8 @@ jobs:
                     echo "Deploy command completed successfully."
                     break
                 elif [[ "$status" == "Failed" ]]; then
-                    echo "Deploy command failed."
+                    echo "Deploy command failed. Command details:"
+                    aws ssm list-command-invocations --command-id ${{steps.deploy.outputs.deploy-command-id}} --details
                     exit 1
                 else
                     echo "Deploy command is still in progress..."
