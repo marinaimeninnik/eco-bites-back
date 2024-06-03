@@ -104,7 +104,7 @@ jobs:
 
   deliver:
     needs: build
-    uses: marinaimeninnik/eco-bites-infra/.github/workflows/infra-create.yaml@docker-compose
+    uses: marinaimeninnik/eco-bites-infra/.github/workflows/infra-create.yaml@frontend_deployment
     permissions:
       id-token: write
       contents: read
