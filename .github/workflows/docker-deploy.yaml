@@ -63,6 +63,9 @@ jobs:
                 fi
             done
 
+      - name: CHECK db migration directory
+        run: ls -l ./db/migration/
+
       - name: Deploy to EC2
         id: deploy
         run: |
