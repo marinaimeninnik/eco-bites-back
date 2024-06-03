@@ -114,7 +114,7 @@ jobs:
 
   deploy:
     needs: deliver
-    uses: marinaimeninnik/eco-bites-back/.github/workflows/docker-deploy.yaml@main
+    uses: marinaimeninnik/eco-bites-back/.github/workflows/docker-deploy.yaml@docker-compose
     permissions:
       id-token: write
       contents: read
