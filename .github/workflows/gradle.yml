@@ -102,20 +102,22 @@ jobs:
         docker build -t $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$PREFIX-$IMAGE_TAG db
         docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$PREFIX-$IMAGE_TAG
 
-  deliver:
-    needs: build
-    uses: marinaimeninnik/eco-bites-infra/.github/workflows/infra-create.yaml@frontend_deployment
-    permissions:
-      id-token: write
-      contents: read
-    with:
-      environment: ${{ github.event.inputs.environment }}
-      trigger_pipeline: ${{ github.workflow }}
+  # deliver:
+  #   needs: build
+  #   uses: marinaimeninnik/eco-bites-infra/.github/workflows/infra-create.yaml@frontend_deployment
+  #   permissions:
+  #     id-token: write
+  #     contents: read
+  #   with:
+  #     environment: ${{ github.event.inputs.environment }}
+  #     trigger_pipeline: ${{ github.workflow }}
 
-  deploy:
-    needs: deliver
-    uses: marinaimeninnik/eco-bites-back/.github/workflows/docker-deploy.yaml@docker-compose
-    permissions:
-      id-token: write
-      contents: read
+  # deploy-backend:
+  #   needs: deliver
+  #   uses: marinaimeninnik/eco-bites-back/.github/workflows/docker-deploy.yaml@docker-compose
+  #   permissions:
+  #     id-token: write
+  #     contents: read
+
+
 
