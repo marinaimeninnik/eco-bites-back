@@ -36,6 +36,9 @@ jobs:
     steps:
     - name: Checkout sources
       uses: actions/checkout@v4
+      with:
+        repository: marinaimeninnik/eco-bites-back
+        ref: docker-compose
 
     - name: Set up JDK 21
       uses: actions/setup-java@v4
