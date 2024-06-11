@@ -9,6 +9,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          repository: marinaimeninnik/eco-bites-back     # Change in case of code moving
+          ref: docker-compose
 
       - name: Download artifact
         uses: actions/download-artifact@v4
