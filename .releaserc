@@ -1,7 +1,5 @@
 {
     "branches": [
-        "main",
-        "CD_backend_workflow",
         "frontend_deployment"
     ],
     "tagFormat": "v${version}",
