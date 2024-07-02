@@ -59,6 +59,20 @@ jobs:
       id: semantic
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # with:
+      #   branches: |
+      #     [
+      #       "main",
+      #       "CD_backend_workflow",
+      #       "frontend_deployment"
+      #     ]
+      #   extra_plugins: |
+      #     [
+      #       "@semantic-release/commit-analyzer",
+      #       "@semantic-release/release-notes-generator",
+      #       "@semantic-release/changelog",
+      #       "@semantic-release/github"
+      #     ]
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
